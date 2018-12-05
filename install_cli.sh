@@ -47,11 +47,12 @@ else
   echo "pip is already installed"
 fi
 
-if ! command -v aztest &>/dev/null
+if [ \( $DEBUG -eq "1" \) -o ! \( -x "$(command -v aztest)" \) ]
 then
-  pip install -editable .
+  pip install --editable .
   echo "Installed aztest cli"
 else
-  echo "aztest already installed"
+  echo "The cli is already installed. Skipping installation. If you want to override run 'export DEBUG=1' before executing this script."
 fi
+
 echo "Run aztest --help for details"
