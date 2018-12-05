@@ -107,7 +107,7 @@ def blobstorage():
 @option('--blob_storage_account', '-a', required=True, help='Name of servicebus namespace')
 @option('--blob_storage_sas_name', '-p', required=True, help='Name of servicebus SAS policy with read access')
 @option('--blob_storage_sas_key', '-k', required=True, help='Key value of servicebus SAS policy with read access')
-@option('--', '-c', required=True, help='Blob container name')
+@option('--blob_storage_container', '-c', required=True, help='Blob container name')
 @option('--path', required=True, help='Blob path')
 def blobstorage_download(blob_storage_account, blob_storage_sas_name, blob_storage_sas_key, blob_storage_container, path):
     raise NotImplementedError
