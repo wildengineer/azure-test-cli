@@ -15,19 +15,18 @@ function getMachineType {
 machine=$(getMachineType)
 if ! command -v python3 &>/dev/null
 then
-  if [ "$machine" = "Mac" ]
+  if ${machine} == "Mac"
   then
-
-      if ! [ -x "$(command -v brew)" ]
+      if ! $(checkIfCmdExists brew)
       then
         echo "Installing python with brew"
         brew install python3
       else
         echo "This script requires homebrew"
       fi
-  elif [ "$machine" = "Linux" ]
+  elif ${machine} == "Linux"
   then
-      if ! [ -x "$(command -v apt-get)" ]
+      if ! $(checkIfCmdExists apt-get)
       then
         echo "Updating apt-get"
         apt-get update
