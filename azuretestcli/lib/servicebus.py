@@ -4,12 +4,11 @@ from azure.servicebus import ServiceBusService, Message
 from click import echo
 
 
-class ServiceBusDelegate():
+class ServiceBusDelegate:
     """
         Delegate to interact with servicebus
     """
     def __init__(self, namespace, sasname, saskey):
-        super().__init__()
         self.service_bus_service = ServiceBusService(namespace, shared_access_key_name=sasname, shared_access_key_value=saskey)
 
     def send_queue_message(self, name, message, repeat):

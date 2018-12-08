@@ -8,7 +8,9 @@ setup(
     install_requires=[
         'click',
         'asyncio',
-        'azure-eventhub'
+        'azure-eventhub',
+        'azure-servicebus',
+        'azure-storage-blob'
     ],
     entry_points='''
         [console_scripts]
