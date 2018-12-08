@@ -12,6 +12,10 @@ function getMachineType {
   echo ${machine}
 }
 
+checkIfCmdExists () {
+    command -v "$1" >/dev/null
+}
+
 machine=$(getMachineType)
 if ! command -v python3 &>/dev/null
 then
@@ -46,12 +50,13 @@ else
   echo "pip is already installed"
 fi
 
-if [ \( $DEBUG -eq "1" \) -o ! \( -x "$(command -v aztest)" \) ]
+if [[ $* == *-o* ]] || ! $(checkIfCmdExists aztest)
 then
   pip install --editable .
   echo "Installed aztest cli"
 else
-  echo "The cli is already installed. Skipping installation. If you want to override run 'export DEBUG=1' before executing this script."
+  echo "The cli is already installed. Skipping installation. If you want to override add the override flag [-o]."
+  echo "Example: ./install_cli.sh -o"
 fi
 
 echo "Run aztest --help for details"
