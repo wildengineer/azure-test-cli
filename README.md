@@ -4,8 +4,11 @@ eventhub, blob storate, queue storage, and table storage.
 
 ## Install
 ```
-pip install azure-test-cli
+git clone https://github.com/wildengineer/azure-test-cli.git
+cd azure-test-cli
+install_cli.sh
 ```
+Use ```install_cli.sh -o``` if you want to override an existing install of the cli.
 
 ## Usage
 
