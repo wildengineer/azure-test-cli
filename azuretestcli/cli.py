@@ -1,5 +1,6 @@
 from click import option, group
 
+from azuretestcli import BlobStorageDelegate
 from azuretestcli import EventHubDelegate
 from azuretestcli import ServiceBusDelegate
 
@@ -98,54 +99,84 @@ def servicebus_topic_receive(servicebus_namespace, servicebus_topic_name, servic
     delegate.receive_topic_messages(servicebus_topic_name)
 
 
-@cli.group(help='Perform blobstorage tests [NOT YET IMPLEMENTED]')
-def blobstorage():
+@cli.group(help='Perform blobstorage tests')
+def storage():
     pass
 
 
-@blobstorage.command(name='download', help='Download content from a block blob [NOT YET IMPLEMENTED]')
-@option('--blob_storage_account', '-a', required=True, help='Name of servicebus namespace')
-@option('--blob_storage_sas_name', '-p', required=True, help='Name of servicebus SAS policy with read access')
-@option('--blob_storage_sas_key', '-k', required=True, help='Key value of servicebus SAS policy with read access')
-@option('--blob_storage_container', '-c', required=True, help='Blob container name')
-@option('--path', required=True, help='Blob path')
-def blobstorage_download(blob_storage_account, blob_storage_sas_name, blob_storage_sas_key, blob_storage_container, path):
-    raise NotImplementedError
-
-
-@blobstorage.group(help='Perform block blob tests [NOT YET IMPLEMENTED]')
-def block():
+@storage.group(help='Perform block blob tests')
+def blockblob():
     pass
 
 
-@block.command(name='upload', help='Upload content to a block blob [NOT YET IMPLEMENTED]')
-@option('--blob_storage_account', '-a', required=True, help='Name of blob account')
-@option('--blob_storage_sas_name', '-p', required=True, help='Name of SAS policy with write access')
-@option('--blob_storage_sas_key', '-k', required=True, help='Key value of SAS policy with write access')
-@option('--blob_storage_container', '-c', required=True, help='Blob container name')
+@blockblob.command(name='upload', help='Upload file to a block blob')
+@option('--storage_account', '-a', required=True, help='Name of blob account')
+@option('--storage_key', '-k', required=True, help='Storage access key')
+@option('--container', '-c', required=True, help='Blob container name')
 @option('--path', '-b', required=True, help='Blob path of uploaded file')
-@option('--content', '-c', required=True, help='Content to upload to path')
-def blobstorage_upload(blob_storage_account, blob_storage_sas_name, blob_storage_sas_key, blob_storage_container,
-                       path, content):
-    raise NotImplementedError
+@option('--file', '-f', required=True, help='Content to upload to path')
+def blobstorage_upload(storage_account, storage_key, container, path, file):
+    blob_storage_delegate = BlobStorageDelegate(storage_account, storage_key)
+    blob_storage_delegate.block_write(container, path, file)
 
 
-@blobstorage.group(help='Perform append blob tests [NOT YET IMPLEMENTED]')
-def append():
+@blockblob.command(name='download', help='Download content to a block blob')
+@option('--storage_account', '-a', required=True, help='Name of blob account')
+@option('--storage_key', '-k', required=True, help='Storage access key')
+@option('--container', '-c', required=True, help='Blob container name')
+@option('--path', '-b', required=True, help='Blob path of uploaded file')
+@option('--file', '-f', required=True, help='Content to upload to path')
+def blobstorage_download(storage_account, storage_key, container, path, file):
+    blob_storage_delegate = BlobStorageDelegate(storage_account, storage_key)
+    blob_storage_delegate.block_read(container, path, file)
+
+
+@storage.group(help='Perform append blob tests')
+def appendblob():
     pass
 
 
-@append.command(name='append', help='Upload content to a block blob [NOT YET IMPLEMENTED]')
-@option('--blob_storage_account', '-a', required=True, help='Name of blob account')
-@option('--blob_storage_sas_name', '-p', required=True, help='Name of SAS policy with write access')
-@option('--blob_storage_sas_key', '-k', required=True, help='Key value of SAS policy with write access')
-@option('--blob_storage_container', '-c', required=True, help='Blob container name')
-@option('--path', '-b', required=True, help='Blob path of uploaded file')
-@option('--content', '-c', required=True, help='Content to upload to path')
+@appendblob.command(name='delete', help='Delete an append blob')
+@option('--storage_account', '-a', required=True, help='Name of blob account')
+@option('--storage_key', '-k', required=True, help='Name of access key')
+@option('--container', '-c', required=True, help='Blob container name')
+@option('--blob_path', '-b', required=True, help='Blob path of file')
+def blobstorage_delete(storage_account, storage_key, container, blob_path):
+    blob_storage_delegate = BlobStorageDelegate(storage_account, storage_key)
+    blob_storage_delegate.append_delete(container, blob_path)
+
+
+@appendblob.command(name='append', help='Upload content to an append blob')
+@option('--storage_account', '-a', required=True, help='Name of blob account')
+@option('--storage_key', '-k', required=True, help='Name of SAS policy with write access')
+@option('--container', '-c', required=True, help='Blob container name')
+@option('--blob_path', '-b', required=True, help='Blob path of uploaded file')
+@option('--file_path', '-f', required=True, help='Content to upload to path')
 @option('--repeat', '-r', type=int, default=1, help='Count of times to repeat the append the content')
-def blobstorage_append(blob_storage_account, blob_storage_sas_name, blob_storage_sas_key, blob_storage_container,
-                       path, content, repeat):
-    raise NotImplementedError
+def blobstorage_append(storage_account, storage_key, container, blob_path, file_path, repeat):
+    blob_storage_delegate = BlobStorageDelegate(storage_account, storage_key)
+    blob_storage_delegate.append_write(container, blob_path, file_path, repeat)
+
+
+@appendblob.command(name='download', help='Download append blob to local file')
+@option('--storage_account', '-a', required=True, help='Name of blob account')
+@option('--storage_key', '-k', required=True, help='Name of SAS policy with write access')
+@option('--container', '-c', required=True, help='Blob container name')
+@option('--blob_path', '-b', required=True, help='Blob path of uploaded file')
+@option('--file_path', '-f', required=True, help='Content to upload to path')
+def blobstorage_download(storage_account, storage_key, container, blob_path, file_path):
+    blob_storage_delegate = BlobStorageDelegate(storage_account, storage_key)
+    blob_storage_delegate.append_download(container, blob_path, file_path)
+
+
+@appendblob.command(name='stream', help='Stream append blob to output')
+@option('--storage_account', '-a', required=True, help='Name of blob account')
+@option('--storage_key', '-k', required=True, help='Name of SAS policy with write access')
+@option('--container', '-c', required=True, help='Blob container name')
+@option('--blob_path', '-b', required=True, help='Blob path of uploaded file')
+def blobstorage_stream(storage_account, storage_key, container, blob_path):
+    blob_storage_delegate = BlobStorageDelegate(storage_account, storage_key)
+    blob_storage_delegate.append_stream(container, blob_path)
 
 
 if __name__ == '__main__':
