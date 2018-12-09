@@ -3,6 +3,13 @@ Command line interface to test azure resources, such as servicebus,
 eventhub, blob storate, queue storage, and table storage.
 
 ## Install
+
+#### pip install
+```bash
+pip install azure-test-cli
+```
+
+#### Manually
 ```
 git clone https://github.com/wildengineer/azure-test-cli.git
 cd azure-test-cli
