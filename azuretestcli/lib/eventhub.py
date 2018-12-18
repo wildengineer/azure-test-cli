@@ -29,13 +29,13 @@ class EventHubDelegate:
         finally:
             self.client.stop()
 
-    def receive(self, consumergroup):
-        OFFSET = Offset("-1")
+    def receive(self, consumergroup, offset_value="-1"):
+        offset = Offset(offset_value)
         loop = asyncio.get_event_loop()
         info = self.async_client.get_eventhub_info()
-        partitionIdList = info['partition_ids']
-        echo("Reading from {} partitions.".format(len(partitionIdList)))
-        tasks = [asyncio.ensure_future(self.pump("{}".format(i), consumergroup, OFFSET)) for i in partitionIdList]
+        partition_id_list = info['partition_ids']
+        echo("Reading from {} partitions.".format(len(partition_id_list)))
+        tasks = [asyncio.ensure_future(self.pump("{}".format(i), consumergroup, offset)) for i in partition_id_list]
         loop.run_until_complete(asyncio.wait(tasks))
         loop.run_until_complete(self.async_client.stop_async())
         loop.close()
