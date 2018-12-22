@@ -5,7 +5,7 @@ with open('README.md') as file:
 
 setup(
     name='azure-test-cli',
-    version='0.4.2',
+    version='0.4.4',
     packages=find_packages(),
     include_package_data=True,
     author="Michael Groves",
