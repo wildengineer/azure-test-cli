@@ -33,9 +33,11 @@ def eventhub_send(eventhub_namespace, eventhub_name, eventhub_sas_name, eventhub
 @option('--eventhub_sas_name', '-p', required=True, help='Name of eventhub SAS policy with listen rights')
 @option('--eventhub_sas_key', '-k', required=True, help='Key value of eventhub SAS policy with listen rights')
 @option('--consumer_group', '-c', required=True, help='Name of event hub consumer group')
-def eventhub_receive(eventhub_namespace, eventhub_name, eventhub_sas_name, eventhub_sas_key, consumer_group):
+@option('--offset', '-o', required=False, help='Offset from which to consume', default="-1")
+def eventhub_receive(eventhub_namespace, eventhub_name, eventhub_sas_name, eventhub_sas_key, consumer_group,
+                     offset):
     delegate = EventHubDelegate(eventhub_namespace, eventhub_name, eventhub_sas_name, eventhub_sas_key)
-    delegate.receive(consumer_group)
+    delegate.receive(consumer_group, offset)
 
 
 @cli.group(help='Perform servicebus tests')

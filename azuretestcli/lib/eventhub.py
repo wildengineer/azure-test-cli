@@ -29,7 +29,7 @@ class EventHubDelegate:
         finally:
             self.client.stop()
 
-    def receive(self, consumergroup, offset_value="-1"):
+    def receive(self, consumergroup, offset_value):
         offset = Offset(offset_value)
         loop = asyncio.get_event_loop()
         info = self.async_client.get_eventhub_info()
